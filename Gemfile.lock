@@ -1,0 +1,18 @@
+GIT
+  remote: https://github.com/hashicorp/vault-ruby
+  revision: df0dc189c6944615d8f675b6d349d3644954c8c3
+  specs:
+    vault (0.7.3)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  vault!
+
+BUNDLED WITH
+   1.13.6
