@@ -17,7 +17,7 @@ require "vault"
 
 puts "Checking if Vault is initialized."
 
-unless Vault.sys.init_status.initialized?
+if !Vault.sys.init_status.initialized?
   puts "Vault is not initialized. Attempting to initialize the Vault server."
 
   pgp_key_path = ENV["PGP_KEY_PATH"]
@@ -42,19 +42,25 @@ The following values are Base64 encoded and encrypted with OpenPGP.
 Unseal key: #{response.keys_base64.first}
 Root token: #{response.root_token}
 
-Redeploy vault-auto-unsealer with the environment variable UNSEAL_KEY to the decrypted unseal key.
-vault-auto-unsealer will now sleep until terminated with SIGTERM, so that Kubernetes will not try to restart it before an operator can redeploy it with UNSEAL_KEY set.
+Redeploy vault-auto-unsealer with the environment variable UNSEAL_KEY set to the decrypted unseal key.
 EOS
-
-  sleep
+else
+  puts "Vault was already initialized."
 end
-
-puts "Vault was already initialized."
 
 unseal_key = ENV["UNSEAL_KEY"]
 
 if unseal_key.nil? || unseal_key == ""
   abort "Environment variable UNSEAL_KEY must be set to the decrypted Vault unseal key."
+end
+
+if unseal_key.bytesize != 64
+  puts <<EOS
+Placeholder UNSEAL_KEY detected.
+vault-auto-unsealer will now sleep until terminated with SIGTERM, so that Kubernetes will not try to restart it before an operator can redeploy it with UNSEAL_KEY set.
+EOS
+
+  sleep
 end
 
 puts "Entering main control loop. Vault will be checked every 30 seconds and unsealed if it is found sealed."

@@ -13,11 +13,12 @@ Required environment variables:
   This file should be the Base64 encoding of the binary version of the public key, NOT the ASCII armored format.
   Make sure you don't accidentally append a newline at the end of the file!
 * `UNSEAL_KEY`: The raw decrypted unseal key.
-  When first deployed, set this to a blank string and vault-auto-unsealer will initialize Vault.
+  When first deployed, set this to a placeholder value like "placeholder" and vault-auto-unsealer will initialize Vault.
+  Any value that is not exactly 64 bytes is acceptable as a placeholder value.
 
 ## Usage
 
-When first deployed, set the environment variable `UNSEAL_KEY` to an empty string.
+When first deployed, set the environment variable `UNSEAL_KEY` to "placeholder" (or any other value that is not exactly 64 bytes.)
 vault-auto-unsealer will initialize Vault, configured for a single unseal key.
 It will then print the unseal key and initial root token, encrypted with the supplied OpenPGP public key, to standard output.
 
