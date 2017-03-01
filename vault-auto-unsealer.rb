@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+$stdout.sync = true
+$stderr.sync = true
+
 puts "Starting vault-auto-unsealer."
 
 Signal.trap("TERM") do
