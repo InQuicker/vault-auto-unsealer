@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+puts "Starting vault-auto-unsealer."
+
 Signal.trap("TERM") do
   exit
 end
@@ -10,8 +12,10 @@ end
 
 require "vault"
 
+puts "Checking if Vault is initialized."
+
 unless Vault.sys.init_status.initialized?
-  puts "Attempting to initialize the Vault server."
+  puts "Vault is not initialized. Attempting to initialize the Vault server."
 
   pgp_key_path = ENV["PGP_KEY_PATH"]
 
@@ -42,11 +46,15 @@ EOS
   sleep
 end
 
+puts "Vault was already initialized."
+
 unseal_key = ENV["UNSEAL_KEY"]
 
 if unseal_key.nil? || unseal_key == ""
   abort "Environment variable UNSEAL_KEY must be set to the decrypted Vault unseal key."
 end
+
+puts "Entering main control loop. Vault will be checked every 30 seconds and unsealed if it is found sealed."
 
 loop do
   if Vault.sys.seal_status.sealed?
