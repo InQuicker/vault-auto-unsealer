@@ -11,6 +11,8 @@ end
 
 if ENV["VAULT_ADDR"].nil?
   abort "Environment variable VAULT_ADDR must be set to the address of the Vault server, e.g. http://127.0.0.1:8200"
+else
+  puts "Using Vault instance at: #{ENV["VAULT_ADDR"]}"
 end
 
 require "vault"
